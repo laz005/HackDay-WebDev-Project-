@@ -1,0 +1,113 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SD Hacks Hack Day</title>
+    <link rel="stylesheet" href="./main.css">
+  </head>
+  <body>
+
+    <h1> Hello World BRUHHHHHH </h1>
+      <div id= content>
+      </div>
+      <div class="form--wrapper">
+        <h1>Enter a new post</h1>
+        <form action="/posts/" method="POST">
+          <input id="title" type="text" name="title" placeholder="Title">
+          <input id="post" type="text" name="post" placeholder="Post">
+          <button b="submit--post">Submit</button>
+        </form>
+      </div>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    >
+    </script>
+    <script type="text/javascript" src="./index.js"></script>
+  </body>
+</html> -->
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+        background-color: #000000
+      }
+    </style>
+  </head>
+  <body>
+  	<canvas id="canvas" width="1500" height="850"></canvas>
+
+    <script>
+
+$(function() {
+    var points = [], numPoints = 100, i, canvas, context, width, height, gravity = 0.05, emitter;
+
+    canvas = $("#canvas")[0];
+    width = canvas.width;
+    height = canvas.height;
+    context = canvas.getContext("2d");
+
+
+
+    function initPoint(p) {
+        emitter = {x:Math.random()* width , y:Math.random() * height};
+        p.x = emitter.x;
+        p.y = emitter.y;
+        p.vx = Math.random() * 5 - 2;
+        p.vy = Math.random() * -6 - 3;
+        p.radius = Math.random() * 15 + 1;
+    }
+
+    function update() {
+        var i, point, len = points.length;
+        for(i = 0; i < len; i += 1) {
+            point = points[i];
+            point.vy += gravity;
+            point.x += point.vx;
+            point.y += point.vy;
+            if(point.x > width ||
+               point.x < 0 ||
+               point.y > height ||
+               point.y < 0) {
+                initPoint(point);
+            }
+        }
+    }
+
+    function draw() {
+        var i, point, len = points.length;
+        context.clearRect(0, 0, width, height);
+        for(i = 0; i < len; i += 1) {
+            point = points[i];
+            context.beginPath();
+            context.arc(point.x, point.y, point.radius, 0, Math.PI * 2, false);
+            context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+            context.fill();
+
+        }
+    }
+
+    function addPoint() {
+        var point;
+        if(points.length < numPoints) {
+            point = {};
+            initPoint(point);
+            points.push(point);
+        }
+    }
+
+    setInterval(function() {
+        addPoint();
+        update();
+        draw();
+    }, 1000/24);
+});
+
+    </script>
+  </body>
+</html>
