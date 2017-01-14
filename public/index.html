@@ -45,8 +45,8 @@
     <script>
 
 $(function() {
-    var points = [], numPoints = 100, i, canvas, context, width, height, gravity = 0.05, emitter;
-
+    var points = [], numPoints = 100, colorCount = 0, i, canvas, context, width, height, gravity = 0.05, emitter;
+    var pointsColor = []
     canvas = $("#canvas")[0];
     width = canvas.width;
     height = canvas.height;
@@ -61,6 +61,8 @@ $(function() {
         p.vx = Math.random() * 5 - 2;
         p.vy = Math.random() * -6 - 3;
         p.radius = Math.random() * 15 + 1;
+        pointsColor[colorCount] = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+        colorCount += 1;
     }
 
     function update() {
@@ -78,15 +80,16 @@ $(function() {
             }
         }
     }
-
+    //context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     function draw() {
         var i, point, len = points.length;
         context.clearRect(0, 0, width, height);
+        //context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
         for(i = 0; i < len; i += 1) {
             point = points[i];
             context.beginPath();
             context.arc(point.x, point.y, point.radius, 0, Math.PI * 2, false);
-            context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+            context.fillStyle = pointsColor[i]
             context.fill();
 
         }
@@ -104,6 +107,7 @@ $(function() {
     setInterval(function() {
         addPoint();
         update();
+
         draw();
     }, 1000/24);
 });

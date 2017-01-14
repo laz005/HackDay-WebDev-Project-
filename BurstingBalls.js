@@ -48,65 +48,78 @@
       requestAnimationFrame(draw);
       analyser[analyserMethod]dataArray;
       //TODO: IMPLEMENT DRAWING Methods and call them in draw function.
+      maxAmp = Math.max.apply(null,dataArray);
 
     }
     draw();
   }
 //=============================================================================
 // CODE FOR Drawing objects
-  var points = [], numPoints = 100, i, canvas, context, width, height, gravity = 0.1, emitter;
-  emitter = {x:width /2 , y:height};
+var points = [], numPoints = 100, colorCount = 0, i, canvas, context, width, height, gravity = 0.05, emitter;
+  var pointsColor = []
+  canvas = $("#canvas")[0];
+  width = canvas.width;
+  height = canvas.height;
+  context = canvas.getContext("2d");
+
+
+
   function initPoint(p) {
-        p.x = emitter.x;
-        p.y = emitter.y;
-        p.vx = Math.random() * 5 - 2;
-        p.vy = Math.random() * -6 - 3;
-        p.radius = Math.random() * 15 + 1;
-    }
+      emitter = {x:Math.random()* width , y:Math.random() * height};
+      p.x = emitter.x;
+      p.y = emitter.y;
+      p.vx = Math.random() * 5 - 2;
+      p.vy = Math.random() * -6 - 3;
+      p.radius = Math.random() * 15 + 1;
+      pointsColor[colorCount] = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      colorCount += 1;
+  }
 
-    function update() {
-        var i, point, len = points.length;
-        for(i = 0; i < len; i += 1) {
-            point = points[i];
-            point.vy += gravity;
-            point.x += point.vx;
-            point.y += point.vy;
-            if(point.x > width ||
-               point.x < 0 ||
-               point.y > height ||
-               point.y < 0) {
-                initPoint(point);
-            }
-        }
-    }
+  function update() {
+      var i, point, len = points.length;
+      for(i = 0; i < len; i += 1) {
+          point = points[i];
+          point.vy += gravity;
+          point.x += point.vx;
+          point.y += point.vy;
+          if(point.x > width ||
+             point.x < 0 ||
+             point.y > height ||
+             point.y < 0) {
+              initPoint(point);
+          }
+      }
+  }
+  //context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+  function drawCircle() {
+      var i, point, len = points.length;
+      context.clearRect(0, 0, width, height);
+      //context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      for(i = 0; i < len; i += 1) {
+          point = points[i];
+          context.beginPath();
+          context.arc(point.x, point.y, point.radius, 0, Math.PI * 2, false);
+          context.fillStyle = pointsColor[i]
+          context.fill();
 
-    function drawCircle() {
-        var i, point, len = points.length;
-        context.clearRect(0, 0, width, height);
-        for(i = 0; i < len; i += 1) {
-            point = points[i];
-            context.beginPath();
-            context.arc(point.x, point.y, point.radius, 0, Math.PI * 2, false);
-            context.fillStyle = "#9cf000";
-            context.fill();
+      }
+  }
 
-        }
-    }
+  function addPoint() {
+      var point;
+      if(points.length < numPoints) {
+          point = {};
+          initPoint(point);
+          points.push(point);
+      }
+  }
 
-    function addPoint() {
-        var point;
-        if(points.length < numPoints) {
-            point = {};
-            initPoint(point);
-            points.push(point);
-        }
-    }
+  setInterval(function() {
+      addPoint();
+      update();
 
-    setInterval(function() {
-        addPoint();
-        update();
-        draw();
-    }, 1000/24);
+      drawCircle();
+  }, 1000/24);
 })();
 
 
